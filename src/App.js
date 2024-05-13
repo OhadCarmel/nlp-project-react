@@ -1,24 +1,37 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import WelcomePage from "./components/WelcomePage/WelcomePage";
+import ExperimentScreen from "./components/ExperimentScreen/ExperimentScreen";
+import db from "./Data/db";
+import { Switch, FormControlLabel } from "@mui/material";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+  const [startExperiment, setStartExperiment] = useState(false);
+  const [wordByWord, setWordByWord] = useState(false);
+  const [dbIndex, setDbIndex] = useState(0);
+  const [displayTextWordByWord, setDisplayTextWordByWord] = useState(false);
+
+  function handleStart() {
+    setStartExperiment(true);
+  }
+
+  function renderNewExperiment() {
+    setDbIndex((prevIndex) => prevIndex + 1);
+    console.log("Start Experiment");
+  }
+
+
+  return !startExperiment ? (
+      <WelcomePage handleStart={handleStart} handleWordByWord={setWordByWord} wordByWord={wordByWord}/>
+  ) : (
+    <ExperimentScreen
+      firstProbe={db[dbIndex].probes[0]}
+      secondProbe={db[dbIndex].probes[1]}
+      description={db[dbIndex].description}
+      imgLink={db[dbIndex].image_link}
+      renderNewExperiment={renderNewExperiment}
+      logits={db[dbIndex].logits}
+      wordByWord={wordByWord}
+    />
   );
 }
 
